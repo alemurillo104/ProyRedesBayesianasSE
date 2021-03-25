@@ -75,13 +75,31 @@ public class RedBayesiana {
                 //u ya no puede ser meta, porque esta siendo añadido como adyacente 
                 
                 setMeta(u);
+                //si existe la arista adyacente y la probabilidad tambien, solo la actualizo
+                int index = existeAdyacente(vertice, u);
                 
-                vertice.setAdyacente(u, prob);
+                if (index == -1) { //no existe, añado uno nuevo
+                    vertice.setAdyacente(u, prob);
+                }else{ //existe, lo actualizo 
+                    vertice.setAdyacenteI(index, prob);
+                    //vertice.getAdyacentes().get(index).setProbabilidad(prob);
+                }
+                
                 break; //lo encontre, lo añado y bye
             }
         }
     }
     
+    public int existeAdyacente(Vertice v, String u){
+        LinkedList<Adyacente> adys = v.getAdyacentes();
+        for (int i = 0; i < adys.size(); i++) {
+            if (adys.get(i).getVerticeU().compareTo(u) == 0) { //el adyacent existe
+                
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public void setMeta(String u){
         for (int i = 0; i < vertices.size(); i++) {
@@ -146,20 +164,7 @@ public class RedBayesiana {
         }
         return -1;
     }
-    
-    /*
-        public float getProb(Vertice u, Vertice v){
-        
-        LinkedList<Adyacente> A = getAdyacentes(v);
-        for (int i = 0; i < A.size(); i++) {
-            if (A.get(i).getVerticeU() == u ) {
-                return A.get(i).getProbabilidad();
-            }
-        }
-        return -1;
-    }
-    */
-    
+ 
     public LinkedList<Adyacente> getAdyacentes(Vertice v){
         for (int i = 0; i < vertices.size(); i++) {
             if (vertices.get(i) == v) {
@@ -190,7 +195,12 @@ public class RedBayesiana {
             LinkedList<String> metas = getMetas();
             for (int i = 0; i < metas.size(); i++) {
               float res = CF_Fun(metas.get(i));
-              resp += "Resultado para " + metas.get(i) +" es: " + (res * 100) + "% \n";
+              double d = res * 100;
+              double res2 = Math.round(d*100.0)/100.0;
+              
+              resp += "La Meta " + metas.get(i) +" se cumple al: " + res2 + "% \n";
+              //resp += "La Meta " + metas.get(i) +" se cumple al: " + (res * 100) + "% \n";
+              //resp += "Resultado para " + metas.get(i) +" es: " + ( Math.round(res * 100)) + "% \n";
               System.out.println("Resultado para " + metas.get(i) +" es: " + res);  
             }
             /*float res = CF_Fun("M");
@@ -229,37 +239,25 @@ public class RedBayesiana {
         return true;
     }
     
+    public void todosMenosUno(){
+        for (Vertice vertice : vertices) {
+            vertice.setCF(-1);
+        }
+    }
+    
     //-----------------------------------
 
     
     //-------para la o las metas---------
-    /*
-    public void setMetas(){
-        
-        boolean esMeta = true;
-        
-        for (int i = 0; i < vertices.size(); i++) {
-            Vertice v = vertices.get(i);
-            LinkedList<Adyacente> adys = v.getAdyacentes();
-            
-            for (int j = 0; j < adys.size(); j++) {    
-                String ad = adys.get(j).getVerticeU();
-                
-                if (ad.compareTo(v.getTag()) == 0) {
-                    esMeta = false;
-                }
-            }
-        }
-    }*/
-    
+
     public LinkedList<String> getMetas(){
-        LinkedList<Vertice> metas = new LinkedList<>();
+        //LinkedList<Vertice> metas = new LinkedList<>();
         LinkedList<String> metasS = new LinkedList<>();
         
         for (int i = 0; i < vertices.size(); i++) {
             Vertice v = vertices.get(i);
             if (v.isMeta()) {
-                metas.add(v);
+                //metas.add(v);
                 metasS.add(v.getTag());
             }
         }

@@ -1,1 +1,0 @@
-[{"tag":"A","CF":-1.0,"isHecho":true,"isMeta":false,"PosX":107,"PosY":113,"adys":[]},{"tag":"P","CF":-1.0,"isHecho":false,"isMeta":true,"PosX":93,"PosY":224,"adys":[{"verticeU":"A","probabilidad":0.5},{"verticeU":"L","probabilidad":0.5}]},{"tag":"L","CF":-1.0,"isHecho":true,"isMeta":false,"PosX":229,"PosY":181,"adys":[]}]

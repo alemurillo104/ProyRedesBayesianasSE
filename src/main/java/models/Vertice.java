@@ -31,6 +31,10 @@ public class Vertice {
         Adyacente a = new Adyacente(u, prob);
         adys.add(a);//validar si se insertan 2 iguales, no deberia admitir repetidos, fijarse eso luego
     }
+    
+    public void setAdyacenteI(int i, float prob){
+        adys.get(i).setProbabilidad(prob);
+    }
   
     public String getTag() {
         return tag;

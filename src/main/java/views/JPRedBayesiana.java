@@ -2,6 +2,7 @@
 package views;
 
 import com.google.gson.Gson;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,11 +34,17 @@ public class JPRedBayesiana extends javax.swing.JFrame {
     private String actualVertice;
     private String vOrigen, vDestino;
     private float vprobabilidad;
+    private boolean archivoExiste;
+    private String nombreArchivo;
     
     public JPRedBayesiana() {
         initComponents();
         RB = new RedBayesiana();
         action = Constantes.INICIAL;
+        
+        archivoExiste = false;
+        nombreArchivo = "";
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -314,7 +321,11 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                             JOptionPane.showConfirmDialog(rootPane, "Ingrese vertices válidos");
                         }else{
                             //RB.setAdyacenteProbV(u, v, vprobabilidad); //verificar
+                            
+                            //añade adyacents no duplicados, solo actualiza el valor 
                             RB.setAdyacenteProb(u.getTag(), v.getTag(), vprobabilidad); //verificar tambien, este me funciono primero
+                       
+                            
                             //RB.setAdyacente(u, v, vprobabilidad);
                             Graphics G1 = lienzo.getGraphics();
                             int vposX = v.getPosX();
@@ -322,7 +333,21 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                             int uposX = u.getPosX();
                             int uposY = u.getPosY();
 
+                            
+                            //si existe la probabilidad es actualizarla nomas
+                            
+                            G1.setColor(this.getBackground());
+                            //G1.setColor(Color.red);
+                            
+                            G1.fillRect((vposX + uposX)/2, ((vposY + uposY )/2) - 10, 20, 12);
+                            //G1.setColor(Color.BLACK);
+                            
                             //x = x + 30;
+                            
+                            //esto es para borrar la arista, seria en otro boton
+                            /*G1.fillRect(vposX, vposY, uposX - vposX,12);
+                            */
+                            G1.setColor(Color.black);
                             G1.drawLine(vposX, vposY, uposX, uposY);
                             G1.drawString(dato, (vposX + uposX)/2, (vposY + uposY )/ 2);
                             //G1.drawLine(G.PosX.get(u) + 12, G.PosY.get(u) + 12, G.PosX.get(v), G.PosY.get(v));
@@ -338,7 +363,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addProbabilidadButtonActionPerformed
 
-    private void darValoresHN(){
+    private boolean darValoresHN(){
         //dar valores a los HN
         
         for (Vertice v : RB.vertices) {
@@ -353,35 +378,54 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                         cf = Float.parseFloat(dato);
                     } catch (Exception e) {
                         JOptionPane.showConfirmDialog(rootPane, "Ingrese el valor de un CF válido");
-                        break;
+                        return false;
+                        //break;
                     }
                 }
                 Graphics G1 = lienzo.getGraphics();
-                G1.drawString(dato, v.getPosX(), v.getPosY() - 10);
+                
+                //borrar lo anterior
+                
+                //G1.setColor(Color.GRAY);
+                G1.setColor(this.getBackground());
+                G1.fillRect(v.getPosX()- 10, v.getPosY() - 20, 20, 12);
+                G1.setColor(Color.BLACK);
+                G1.drawString(dato, v.getPosX() - 10, v.getPosY() - 10);
                 
                 //TODO: Para eliminar los CF's que ya use, PROBAR
                 //G1.clearRect(vkey.getPosX(), vkey.getPosY() + 15, 20, 20);
                 v.setCF(cf); //creo que lo actualicé
             }
         }
+        return true;
     }
     
     private void inferenciaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inferenciaButtonActionPerformed
        
+        
         if ( action.equals(Constantes.INICIAL) ) {
-            String res;
+            
+            //poner todos los CFs en -1
+            
+            RB.todosMenosUno();
+            
+            String res = "";
             if (RB.verificarRed()) {
-                 //Damos valores a los HNs
-                darValoresHN();
-
-                res = RB.InferenciaStr();
+                //Damos valores a los HNs  
+                boolean b = darValoresHN();
+                
+                if (b) { //le dimos valores correctos a los CFs
+                    res = RB.InferenciaStr();
+                }
+                
+                resultadosTextArea.append("\n");//hago un espacio ñe
+                resultadosTextArea.append(res); //lo va a poner abajito   
+                
             }else{
                 System.out.println("Inserte bien su red");
                 res = "Inserte bien su red, no se realizó la inferencia";
+                JOptionPane.showConfirmDialog(rootPane, res);
             }
-            
-            resultadosTextArea.append("\n");//hago un espacio ñe
-            resultadosTextArea.append(res); //lo va a poner abajito        
         }
     }//GEN-LAST:event_inferenciaButtonActionPerformed
 
@@ -403,36 +447,57 @@ public class JPRedBayesiana extends javax.swing.JFrame {
 
     private void guardarRedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarRedButtonActionPerformed
         
-        Gson g = new Gson();
-        
-        String datos = g.toJson(RB);
-        //String datos = g.toJson(RB.vertices);
-        
-        UUID uniqid = UUID.randomUUID();
-        //UUID uniqid = UUID.randomUUID();
-        //uniqid.toString();
-        String filename = "red"+uniqid+".json";
-        
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-            writer.write(datos);
-
-            writer.close();
-            
-            JOptionPane.showConfirmDialog(rootPane, "Gráfica de la Red Bayesiana guardada en el directorio del proyecto! :)");
-            
-        } catch (IOException ex) {
-            Logger.getLogger(JPRedBayesiana.class.getName()).log(Level.SEVERE, null, ex);
-            
-            JOptionPane.showConfirmDialog(rootPane, "Ups! Algo salió mal con el guardado del gráfico de la red :(");
-        }
+            String archivoName = JOptionPane.showInputDialog("Nombre del archivo:" );
         
-        /*
-        try (RandomAccessFile raf = new RandomAccessFile(filename, "rw")){
-            raf.writeChars(datos); // creo
-            
+            Gson g = new Gson();
+
+            String datos = g.toJson(RB);
+            //String datos = g.toJson(RB.vertices);
+
+            String filename = "";
+
+            if (archivoExiste) {
+                filename = nombreArchivo;
+            }else{
+                if (archivoName.isEmpty()) {
+                    UUID uniqid = UUID.randomUUID();
+                    filename = "red"+uniqid+".json";
+                }else{
+                    filename = archivoName+".json";
+                }
+                //uniqid.toString();
+            }
+
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+                writer.write(datos);
+
+                writer.close();
+
+                JOptionPane.showConfirmDialog(rootPane, "Gráfica de la Red Bayesiana guardada en el directorio del proyecto! :)");
+
+                if (!archivoExiste) {
+                    archivoExiste = true;
+                    nombreArchivo = filename;
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(JPRedBayesiana.class.getName()).log(Level.SEVERE, null, ex);
+
+                JOptionPane.showConfirmDialog(rootPane, "Ups! Algo salió mal con el guardado del gráfico de la red :(");
+            }
+
+            /*
+            try (RandomAccessFile raf = new RandomAccessFile(filename, "rw")){
+                raf.writeChars(datos); // creo
+
+            } catch (Exception e) {
+            }*/
         } catch (Exception e) {
-        }*/
+            System.out.println("le dio a cancelar");
+        }
+       
     }//GEN-LAST:event_guardarRedButtonActionPerformed
 
     private void limpiarLienzoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarLienzoButtonActionPerformed
@@ -445,6 +510,10 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         verticeOrigen.setText("");
         verticeDestino.setText("");
         resultadosTextArea.setText(""); //limpio los resultados tambien
+        
+        //no tengo archivo para cargar o actualizarlo
+        archivoExiste = false;
+        nombreArchivo = "";
         //lienzo.removeAll(); //creo
     }//GEN-LAST:event_limpiarLienzoButtonActionPerformed
 
@@ -461,6 +530,9 @@ public class JPRedBayesiana extends javax.swing.JFrame {
             while ( (linea = br.readLine())!= null ) {                
                 json+= linea;
             }
+            archivoExiste = true;
+            nombreArchivo = file.getName(); // creo probar
+            System.out.println("nombre del archivo = "+nombreArchivo);
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainGame.class.getName()).log(Level.SEVERE, null, ex);

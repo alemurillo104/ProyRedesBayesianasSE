@@ -177,11 +177,10 @@ public class MainGame {
 
 //TO DO - LO QUE FALTA POR HACER
 
-// 2. Almacenar la info de la red en un archivo
-// 3. Leer del archivo los datos para graficar la red
-// 4. Graficar la red
+// 5. Permitir editar los vertices y las aristas de los graficos 
 
-
+// 10. borrar las aristas
+// 11. Visual grafico, indicar que se puede añadir o editar con los mismos campos
 
 //IN PROGRESS
 // 1. Graficar
@@ -193,3 +192,13 @@ public class MainGame {
 //DONE 
 //1. Añade vertices duplicados
 //2. Añade probabilidad a vertices que no existen ash /// no se cual era el ejemplo :c
+
+// 2. Almacenar la info de la red en un archivo
+// 3. Leer del archivo los datos para graficar la red
+// 4. Graficar la red
+// 6. Actualizar los graficos de la red guardada, es decir, actualizar los datos del mismo archivo
+//    y luego guardarlo en el mismo.
+// 7. Poner todos los CFs en -1
+// 8. Borrar los CFs graficamente cuando volvemos a hacer la inferencia para que no se sobreponga
+
+// 9. Editar las probabilidades de las aristas
