@@ -21,8 +21,7 @@ public class RedBayesiana {
     
     public void addVertice(String tag){
         Vertice v = new Vertice(tag);
-        //probar que no admite repetidos tamb, hacer esa distincion, aqui no esta hecha aun
-        vertices.add(v);
+        vertices.add(v); //no admite repetidos
     }
     
     public Vertice getVertice(String tag){
@@ -31,7 +30,7 @@ public class RedBayesiana {
                 return vertice;
             }
         }
-        return null; //creo, probar
+        return null; //
     }
     
     public void setVerticeCF(Vertice v, float dato){
@@ -51,22 +50,7 @@ public class RedBayesiana {
         }
     }
     
-    
-    public void setAdyacenteProbV(Vertice v, Vertice u, float prob){
-        for (Vertice vertice : vertices) {
-            if (vertice == v) {
-                
-                //lo mismo
-                vertice.setIsHecho(false);
-                setMeta(u.getTag());
-                
-                vertice.setAdyacente(u.getTag(), prob);
-                break; //lo encontre, lo añado y bye
-            }
-        }
-    }
-    
-     public void setAdyacenteProb(String v, String u, float prob){
+    public void setAdyacenteProb(String v, String u, float prob){
         for (Vertice vertice : vertices) {
             if (vertice.getTag().compareTo(v) == 0) {
                 //ya no es hecho nativo
@@ -74,7 +58,7 @@ public class RedBayesiana {
                 
                 //u ya no puede ser meta, porque esta siendo añadido como adyacente 
                 
-                setMeta(u);
+                setMeta(u, false);
                 //si existe la arista adyacente y la probabilidad tambien, solo la actualizo
                 int index = existeAdyacente(vertice, u);
                 
@@ -82,7 +66,6 @@ public class RedBayesiana {
                     vertice.setAdyacente(u, prob);
                 }else{ //existe, lo actualizo 
                     vertice.setAdyacenteI(index, prob);
-                    //vertice.getAdyacentes().get(index).setProbabilidad(prob);
                 }
                 
                 break; //lo encontre, lo añado y bye
@@ -91,21 +74,21 @@ public class RedBayesiana {
     }
     
     public int existeAdyacente(Vertice v, String u){
+        
         LinkedList<Adyacente> adys = v.getAdyacentes();
         for (int i = 0; i < adys.size(); i++) {
             if (adys.get(i).getVerticeU().compareTo(u) == 0) { //el adyacent existe
-                
                 return i;
             }
         }
         return -1;
     }
 
-    public void setMeta(String u){
+    public void setMeta(String u, boolean sw){
         for (int i = 0; i < vertices.size(); i++) {
             Vertice v = vertices.get(i);
             if (v.getTag().compareTo(u) == 0) {
-                v.setIsMeta(false);
+                v.setIsMeta(sw);
                 break;
             }
         }
@@ -128,29 +111,28 @@ public class RedBayesiana {
             return CFHecho(v);
         }
         LinkedList<Adyacente> A = getAdyacentes(v);
-        //if (A != null) { //ese vertice existe o algo asi
-            float ac = 0;
-            
-            for (int i = 0; i < A.size(); i++) {
-                String adyString = A.get(i).getVerticeU();
-                Vertice ady = getVertice(adyString);
-                if (ady.getCF() == -1) {
-                    ady.setCF(CF(ady));
-                }
-                
-                float prob = getProb(ady, v);
-                float nuevo = ady.getCF() * prob;
-                ac += nuevo;
+        
+        float ac = 0;
+
+        for (int i = 0; i < A.size(); i++) {
+            String adyString = A.get(i).getVerticeU();
+            Vertice ady = getVertice(adyString);
+            if (ady.getCF() == -1) {
+                ady.setCF(CF(ady));
             }
-            v.setCF(ac);
-             return ac;
-        //}
-        //return -1;
+
+            float prob = getProb(ady, v);
+            float nuevo = ady.getCF() * prob;
+            ac += nuevo;
+        }
+        v.setCF(ac);
+        return ac;
+
     }
     
-       private float CF_Fun(String m) {
-           Vertice v = getVertice(m);
-           return CF(v);
+    public float CF_Fun(String m) {
+        Vertice v = getVertice(m);
+        return CF(v);
     }
     
     public float getProb(Vertice u, Vertice v){
@@ -175,53 +157,27 @@ public class RedBayesiana {
     }
     
     //---------Para la inferencia--------
-    public void Inferencia(){
-        if (verificarRed()) {
-            LinkedList<String> metas = getMetas();
-            for (int i = 0; i < metas.size(); i++) {
-              float res = CF_Fun(metas.get(i));
-              System.out.println("Resultado para " + metas.get(i) +" es: " + res);  
-            }
-            /*float res = CF_Fun("M");
-            System.out.println("Resultado es: " + res);*/
-        }else{
-            System.out.println("Inserte bien su red");
-        }
-    }
     
-    public String InferenciaStr(){
+    public String Inferencia(){
         String resp = "";
         if (verificarRed()) {
             LinkedList<String> metas = getMetas();
             for (int i = 0; i < metas.size(); i++) {
               float res = CF_Fun(metas.get(i));
-              double d = res * 100;
-              double res2 = Math.round(d*100.0)/100.0;
               
-              resp += "La Meta " + metas.get(i) +" se cumple al: " + res2 + "% \n";
-              //resp += "La Meta " + metas.get(i) +" se cumple al: " + (res * 100) + "% \n";
-              //resp += "Resultado para " + metas.get(i) +" es: " + ( Math.round(res * 100)) + "% \n";
+              double resporcentual = redondear2Decimales(res * 100);
+              
+              resp += "La Meta " + metas.get(i) +" se cumple al: " + resporcentual + "% \n";
+              
               System.out.println("Resultado para " + metas.get(i) +" es: " + res);  
             }
-            /*float res = CF_Fun("M");
-            System.out.println("Resultado es: " + res);*/
+           
         }else{
             System.out.println("Inserte bien su red");
             resp = "Inserte bien su red, no se realizó la inferencia";
         }
         return resp;
     }
-    
-     public void Inferencia2(){
-        if (verificarRed()) {
-          
-            float res = CF_Fun("M");
-            System.out.println("Resultado es: " + res);
-        }else{
-            System.out.println("Inserte bien su red");
-        }
-    }
-    
     
     public boolean verificarRed() {
         for (int i = 0; i < vertices.size(); i++) {
@@ -239,38 +195,31 @@ public class RedBayesiana {
         return true;
     }
     
+    public double redondear2Decimales(double d){
+        return Math.round(d*100.0)/100.0;
+    }
+    
     public void todosMenosUno(){
         for (Vertice vertice : vertices) {
             vertice.setCF(-1);
         }
     }
     
-    //-----------------------------------
-
-    
     //-------para la o las metas---------
 
     public LinkedList<String> getMetas(){
-        //LinkedList<Vertice> metas = new LinkedList<>();
         LinkedList<String> metasS = new LinkedList<>();
         
         for (int i = 0; i < vertices.size(); i++) {
             Vertice v = vertices.get(i);
             if (v.isMeta()) {
-                //metas.add(v);
                 metasS.add(v.getTag());
             }
         }
-        
         return metasS;
- 
     }
     
-    //-----------------------------------
-    
-    
-    
-    //Para printear
+    //Para imprimir la RB
     
     @Override
     public String toString(){
@@ -291,7 +240,5 @@ public class RedBayesiana {
         
         return ac;
     }
-
- 
-
+    
 }

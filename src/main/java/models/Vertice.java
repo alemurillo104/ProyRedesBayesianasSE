@@ -29,7 +29,7 @@ public class Vertice {
     
     public void setAdyacente(String u, float prob){
         Adyacente a = new Adyacente(u, prob);
-        adys.add(a);//validar si se insertan 2 iguales, no deberia admitir repetidos, fijarse eso luego
+        adys.add(a);// no admite repetidos
     }
     
     public void setAdyacenteI(int i, float prob){

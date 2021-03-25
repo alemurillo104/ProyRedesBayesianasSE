@@ -11,12 +11,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Adyacente;
-import models.Persona;
-import models.PersonaArray;
 import models.RedBayesiana;
-import models.RedParserController;
 import models.Vertice;
-import models.VerticeM;
 
 public class MainGame {
     
@@ -54,7 +50,7 @@ public class MainGame {
         */
         
         
-        
+        /*////////////////////////////////////////////
         Gson g = new Gson();
         RedParserController p = g.fromJson(json, RedParserController.class);
         System.out.println(p);
@@ -82,7 +78,7 @@ public class MainGame {
             for (int i = 0; i < ad.length; i++) {
                 System.out.println("verticeU = "+ad[i].getVerticeU());
                 System.out.println("probabilidad = " + ad[i].getProbabilidad());
-            }*/
+            }
         }
         System.out.println("holisssssssssssss");
         System.out.println("length = " + p.getVertices().size());
@@ -103,7 +99,7 @@ public class MainGame {
 //        System.out.println(p);
 //        p.setEdad(12);
 //        System.out.println(p);
-
+/////////////////////////////////////////////////////
 /*
             RedBayesiana RB = new RedBayesiana();
             
@@ -202,3 +198,4 @@ public class MainGame {
 // 8. Borrar los CFs graficamente cuando volvemos a hacer la inferencia para que no se sobreponga
 
 // 9. Editar las probabilidades de las aristas
+//12. Borrar comentarios  y funciones innecesarias

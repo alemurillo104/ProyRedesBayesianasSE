@@ -11,9 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +20,6 @@ import javax.swing.JOptionPane;
 import models.Adyacente;
 import models.Constantes;
 import models.RedBayesiana;
-import models.RedParserController;
 import models.Vertice;
 
 
@@ -36,6 +33,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
     private float vprobabilidad;
     private boolean archivoExiste;
     private String nombreArchivo;
+    private int vsizeX, vsizeY;
     
     public JPRedBayesiana() {
         initComponents();
@@ -44,6 +42,8 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         
         archivoExiste = false;
         nombreArchivo = "";
+        vsizeX = Constantes.VERTICE_SIZE_X;
+        vsizeY = Constantes.VERTICE_SIZE_Y;
         
     }
 
@@ -257,7 +257,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
             if (VerticeTag.length() == 0) {
                 JOptionPane.showConfirmDialog(rootPane, "Ingrese otra vez, no registro un vertice");
             } else {
-                System.out.println("oh vaya");
+                System.out.println("Añadiendo vertice...");
 
                 String VerticeTagU = VerticeTag.toUpperCase();
 
@@ -276,7 +276,6 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                 }else{
                     JOptionPane.showConfirmDialog(rootPane, "El vertice ya existe");
                 }
-
             }
         }
     }//GEN-LAST:event_addVerticeButtonActionPerformed
@@ -285,14 +284,14 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         
         if (action.equals(Constantes.DIBUJAR_VERTICES)) {
             Graphics G1 = lienzo.getGraphics();
-            G1.drawOval(evt.getX() - 8, evt.getY(), 20, 20);
+            G1.drawOval(evt.getX() - (vsizeX /2) - 2, evt.getY(), vsizeX, vsizeY);
             
             Vertice v = RB.getVertice(actualVertice);
             v.setPosX(evt.getX());
             v.setPosY(evt.getY());
             
-            G1.drawString(actualVertice, v.getPosX(), v.getPosY() + 15);
-            //G1.drawString(G.L1.getLast(), G.PosX.getLast(), G.PosY.getLast() + 15);
+            G1.drawString(actualVertice, v.getPosX() - 5, v.getPosY()+(vsizeY - 5));
+            
             action = Constantes.INICIAL;
         }
         
@@ -302,7 +301,6 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         
         if ( action.equals(Constantes.INICIAL) ) {
             
-
             String vorigen = verticeOrigen.getText();
             String vdestino = verticeDestino.getText();
 
@@ -314,56 +312,81 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                 if (!dato.isEmpty()) {
                     System.out.println(dato + " - lo tomeee");
                     try {
-                        vprobabilidad = Float.parseFloat(dato);
-                        Vertice v = RB.getVertice(vorigen.toUpperCase());
-                        Vertice u = RB.getVertice(vdestino.toUpperCase());
-                        if (v == null || u == null ) {
-                            JOptionPane.showConfirmDialog(rootPane, "Ingrese vertices válidos");
+                        float prob = Float.parseFloat(dato);
+                        
+                        if (prob >= 0 && prob <= 1) {
+                            
+                            vprobabilidad = prob;
+                            Vertice v = RB.getVertice(vorigen.toUpperCase());
+                            Vertice u = RB.getVertice(vdestino.toUpperCase());
+                            if (v == null || u == null ) {
+                                JOptionPane.showConfirmDialog(rootPane, "Ingrese vertices válidos");
+                            }else{
+
+                                //añade adyacents no duplicados, solo actualiza el valor 
+                                RB.setAdyacenteProb(u.getTag(), v.getTag(), vprobabilidad); //verificar tambien, este me funciono primero
+
+                                Graphics G1 = lienzo.getGraphics();
+
+                                int vposX = v.getPosX(); int vposY = v.getPosY();
+                                int uposX = u.getPosX(); int uposY = u.getPosY();
+
+                                //si existe la probabilidad es actualizarla nomas
+
+                                G1.setColor(this.getBackground());
+                                G1.fillRect((vposX + uposX)/2, ((vposY + uposY )/2) - 10, 20, 12);
+
+                                //esto es para borrar la arista, seria en otro boton
+                                //G1.fillRect(vposX, vposY, uposX - vposX,12);
+
+                                G1.setColor(Color.black);
+                                G1.drawLine(vposX, vposY, uposX, uposY);
+                                G1.drawString(dato, (vposX + uposX)/2, (vposY + uposY )/ 2);
+
+                            }    
                         }else{
-                            //RB.setAdyacenteProbV(u, v, vprobabilidad); //verificar
-                            
-                            //añade adyacents no duplicados, solo actualiza el valor 
-                            RB.setAdyacenteProb(u.getTag(), v.getTag(), vprobabilidad); //verificar tambien, este me funciono primero
-                       
-                            
-                            //RB.setAdyacente(u, v, vprobabilidad);
-                            Graphics G1 = lienzo.getGraphics();
-                            int vposX = v.getPosX();
-                            int vposY = v.getPosY();
-                            int uposX = u.getPosX();
-                            int uposY = u.getPosY();
-
-                            
-                            //si existe la probabilidad es actualizarla nomas
-                            
-                            G1.setColor(this.getBackground());
-                            //G1.setColor(Color.red);
-                            
-                            G1.fillRect((vposX + uposX)/2, ((vposY + uposY )/2) - 10, 20, 12);
-                            //G1.setColor(Color.BLACK);
-                            
-                            //x = x + 30;
-                            
-                            //esto es para borrar la arista, seria en otro boton
-                            /*G1.fillRect(vposX, vposY, uposX - vposX,12);
-                            */
-                            G1.setColor(Color.black);
-                            G1.drawLine(vposX, vposY, uposX, uposY);
-                            G1.drawString(dato, (vposX + uposX)/2, (vposY + uposY )/ 2);
-                            //G1.drawLine(G.PosX.get(u) + 12, G.PosY.get(u) + 12, G.PosX.get(v), G.PosY.get(v));
-                            //G1.drawString(G.Listacosto(u, v).toString(), (G.PosX.get(u) + G.PosX.get(v)) / 2, (G.PosY.get(u) + G.PosY.get(v)) / 2);
-                        }    
+                            JOptionPane.showConfirmDialog(rootPane, "Ingrese una probabilidad válida (De 0 a 1)");
+                        }
                     } catch (Exception e) {
-                        System.out.println("error we");
+                        System.out.println("Error en la probabilidad");
+                        JOptionPane.showConfirmDialog(rootPane, "Ingrese una probabilidad válida (De 0 a 1)");
                     }
-
-
                 }
             }
         }
     }//GEN-LAST:event_addProbabilidadButtonActionPerformed
 
-    private boolean darValoresHN(){
+  
+    
+    private void inferenciaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inferenciaButtonActionPerformed
+       
+        if ( action.equals(Constantes.INICIAL) ) {
+            
+            resultadosTextArea.setText("");
+            
+            RB.todosMenosUno(); //poner todos los CFs en -1
+            
+            String res = "";
+            if (RB.verificarRed()) {
+                 
+                boolean b = darValoresHN();
+                
+                if (b) { //le dimos valores correctos a los CFs
+                    res = RB.Inferencia();
+                }
+                
+                resultadosTextArea.append("\n");//hago un espacio ñe
+                resultadosTextArea.append(res); //lo va a poner abajito   
+                
+            }else{
+                System.out.println("Inserte bien su red");
+                res = "Inserte bien su red, no se realizó la inferencia";
+                JOptionPane.showConfirmDialog(rootPane, res);
+            }
+        }
+    }//GEN-LAST:event_inferenciaButtonActionPerformed
+
+      private boolean darValoresHN(){
         //dar valores a los HN
         
         for (Vertice v : RB.vertices) {
@@ -386,87 +409,120 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                 
                 //borrar lo anterior
                 
-                //G1.setColor(Color.GRAY);
                 G1.setColor(this.getBackground());
                 G1.fillRect(v.getPosX()- 10, v.getPosY() - 20, 20, 12);
                 G1.setColor(Color.BLACK);
                 G1.drawString(dato, v.getPosX() - 10, v.getPosY() - 10);
                 
-                //TODO: Para eliminar los CF's que ya use, PROBAR
-                //G1.clearRect(vkey.getPosX(), vkey.getPosY() + 15, 20, 20);
-                v.setCF(cf); //creo que lo actualicé
+                v.setCF(cf); //actualizado
             }
         }
         return true;
     }
-    
-    private void inferenciaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inferenciaButtonActionPerformed
-       
-        
-        if ( action.equals(Constantes.INICIAL) ) {
-            
-            //poner todos los CFs en -1
-            
-            RB.todosMenosUno();
-            
-            String res = "";
-            if (RB.verificarRed()) {
-                //Damos valores a los HNs  
-                boolean b = darValoresHN();
-                
-                if (b) { //le dimos valores correctos a los CFs
-                    res = RB.InferenciaStr();
-                }
-                
-                resultadosTextArea.append("\n");//hago un espacio ñe
-                resultadosTextArea.append(res); //lo va a poner abajito   
-                
-            }else{
-                System.out.println("Inserte bien su red");
-                res = "Inserte bien su red, no se realizó la inferencia";
-                JOptionPane.showConfirmDialog(rootPane, res);
-            }
-        }
-    }//GEN-LAST:event_inferenciaButtonActionPerformed
-
+      
     private void cargarRedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarRedButtonActionPerformed
         
+        //limpiar el lienzo
+        limpiarLienzoButtonActionPerformed(evt);
         
         JFileChooser fileChooser = new JFileChooser();
-        //System.out.println("PATH DEL PROYECTO : " + new File(".").getAbsoluteFile());
-        fileChooser.setCurrentDirectory(new File(".").getAbsoluteFile());
+        
+        fileChooser.setCurrentDirectory(new File(".").getAbsoluteFile()); //proyecto path
         int returnVal = fileChooser.showOpenDialog(this); //idk
-        //int returnVal = fileChooserAddDoc.showOpenDialog(fileChooser);
+    
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-             File file = fileChooser.getSelectedFile();
-             
-             cargarRedArchivo(file);
-             
+            File file = fileChooser.getSelectedFile();
+            
+            cargarRedArchivo(file);
         }
     }//GEN-LAST:event_cargarRedButtonActionPerformed
 
+     public void cargarRedArchivo(File file){
+        String json = "";
+        try {
+        
+            FileReader fr = new FileReader(file);
+    
+            BufferedReader br = new BufferedReader(fr);
+            
+            String linea = "";
+            while ( (linea = br.readLine())!= null ) {                
+                json+= linea;
+            }
+            archivoExiste = true;
+            nombreArchivo = file.getName(); // creo probar
+            System.out.println("nombre del archivo = "+nombreArchivo);
+            
+            //Cargar la red del archivo json
+            Gson g = new Gson();
+            
+            RB = g.fromJson(json, RedBayesiana.class); 
+
+            System.out.println(RB.toString());
+
+            //ahora debo graficar la red 
+            graficarRed();
+        
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MainGame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showConfirmDialog(rootPane, "Error. No se encontro el archivo, probar de nuevo.");
+        } catch (IOException ex) {
+            Logger.getLogger(MainGame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showConfirmDialog(rootPane, "Error, probar de nuevo.");
+        }
+    }
+    
+    public void graficarRed(){
+        
+        //primero debo dibujar los vertices
+        
+        Graphics G1 = lienzo.getGraphics();
+        
+        for (Vertice vertice : RB.vertices) {
+            G1.drawOval(vertice.getPosX() - (vsizeX /2) - 2 , vertice.getPosY(), vsizeX, vsizeY); 
+            G1.drawString(vertice.getTag(), vertice.getPosX() - 5, vertice.getPosY() +(vsizeY - 5));
+            
+        }
+        
+        //ahora graficar las aristas
+        
+        for (Vertice vertice : RB.vertices) {
+            LinkedList<Adyacente> adys = vertice.getAdyacentes();
+            for (Adyacente ady : adys) {
+                String vs = ady.getVerticeU();
+                Vertice v = RB.getVertice(vs);
+                if (v != null) { //existe
+                    
+                    //dibujo la arista
+                    G1.drawLine(vertice.getPosX(), vertice.getPosY(), v.getPosX(), v.getPosY());
+                    G1.drawString(String.valueOf(ady.getProbabilidad()), (vertice.getPosX() + v.getPosX()) /2, (vertice.getPosY() + v.getPosY())/2);
+                }
+            }
+        }
+    }
+    
+    
     private void guardarRedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarRedButtonActionPerformed
         
         try {
-            String archivoName = JOptionPane.showInputDialog("Nombre del archivo:" );
-        
             Gson g = new Gson();
 
-            String datos = g.toJson(RB);
-            //String datos = g.toJson(RB.vertices);
-
+            String datos = g.toJson(RB); //parsear la RED a un json en un string
+            
             String filename = "";
 
             if (archivoExiste) {
                 filename = nombreArchivo;
             }else{
+                String archivoName = JOptionPane.showInputDialog("Nombre del archivo:" );
+                
                 if (archivoName.isEmpty()) {
                     UUID uniqid = UUID.randomUUID();
                     filename = "red"+uniqid+".json";
                 }else{
                     filename = archivoName+".json";
                 }
-                //uniqid.toString();
             }
 
             try {
@@ -481,28 +537,24 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                     archivoExiste = true;
                     nombreArchivo = filename;
                 }
+                
+                //Aqui creo que deberia limpiar el lienzo automaticamente
+                limpiarLienzoButtonActionPerformed(evt);
 
             } catch (IOException ex) {
                 Logger.getLogger(JPRedBayesiana.class.getName()).log(Level.SEVERE, null, ex);
 
                 JOptionPane.showConfirmDialog(rootPane, "Ups! Algo salió mal con el guardado del gráfico de la red :(");
             }
-
-            /*
-            try (RandomAccessFile raf = new RandomAccessFile(filename, "rw")){
-                raf.writeChars(datos); // creo
-
-            } catch (Exception e) {
-            }*/
+            
         } catch (Exception e) {
             System.out.println("le dio a cancelar");
         }
-       
     }//GEN-LAST:event_guardarRedButtonActionPerformed
 
     private void limpiarLienzoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarLienzoButtonActionPerformed
         
-        //creo que si limpio el lienzo deberia comenzar con una red nueva (vacia) o no?
+        //Limpiar lienzo =  RB vacia
         
         lienzo.repaint();
         RB = new RedBayesiana();
@@ -514,101 +566,11 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         //no tengo archivo para cargar o actualizarlo
         archivoExiste = false;
         nombreArchivo = "";
-        //lienzo.removeAll(); //creo
+        
     }//GEN-LAST:event_limpiarLienzoButtonActionPerformed
 
     
-    public void cargarRedArchivo(File file){
-        String json = "";
-        try {
-        
-            FileReader fr = new FileReader(file);
-        
-            BufferedReader br = new BufferedReader(fr);
-            
-            String linea = "";
-            while ( (linea = br.readLine())!= null ) {                
-                json+= linea;
-            }
-            archivoExiste = true;
-            nombreArchivo = file.getName(); // creo probar
-            System.out.println("nombre del archivo = "+nombreArchivo);
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MainGame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MainGame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        Gson g = new Gson();
-        RedParserController p = g.fromJson(json, RedParserController.class);
-        System.out.println(p);
-        
-        
-        for (Vertice vertice : p.getVertices()) {
-            
-            System.out.println(vertice.getTag());
-            System.out.println(vertice.getCF());
-            System.out.println(vertice.getPosX());
-            System.out.println(vertice.getPosY());
-            
-            LinkedList<Adyacente> ad = vertice.getAdyacentes();
-            for (int i = 0; i < ad.size(); i++) {
-                System.out.println("verticeU = "+ad.get(i).getVerticeU());
-                System.out.println("probabilidad = " + ad.get(i).getProbabilidad());
-            }
-        }
-        
-        System.out.println("length = " + p.getVertices().size());
-        //RedBayesiana RB = new RedBayesiana();
-        RB.setAdyacentes(p.getVertices());
-        System.out.println(RB.toString());
-        
-        //ahora debo graficar la red 
-        
-        graficarRed();
-        
-        
-    }
-    
-    public void graficarRed(){
-        
-        //primero debo dibujar los vertices
-        
-        Graphics G1 = lienzo.getGraphics();
-        
-        for (Vertice vertice : RB.vertices) {
-            G1.drawOval(vertice.getPosX() - 8, vertice.getPosY(), 20, 20);
-            G1.drawString(vertice.getTag(), vertice.getPosX(), vertice.getPosY() + 15);
-        }
-        
-        //ahora graficar las aristas
-        
-        for (Vertice vertice : RB.vertices) {
-            LinkedList<Adyacente> adys = vertice.getAdyacentes();
-            for (Adyacente ady : adys) {
-                String vs = ady.getVerticeU();
-                Vertice v = RB.getVertice(vs);
-                if (v != null) {
-                    //existe
-                    //dibujo la arista
-                    G1.drawLine(vertice.getPosX(), vertice.getPosY(), v.getPosX(), v.getPosY());
-                    G1.drawString(String.valueOf(ady.getProbabilidad()), (vertice.getPosX() + v.getPosX()) /2, (vertice.getPosY() + v.getPosY())/2);
-                }
-            }
-        }
-
-        
-
-            //G1.drawString(G.L1.getLast(), G.PosX.getLast(), G.PosY.getLast() + 15);
-//        
-//        Graphics G1 = lienzo.getGraphics();
-//        G1.drawString(dato, v.getPosX(), v.getPosY() - 10);
-//        
-//        G1.drawLine(vposX, vposY, uposX, uposY);
-//        G1.drawString(dato, (vposX + uposX)/2, (vposY + uposY )/ 2);
-    }
+   
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
