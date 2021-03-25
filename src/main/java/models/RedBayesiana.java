@@ -5,11 +5,14 @@ import java.util.LinkedList;
 
 public class RedBayesiana {
     
-    //public Vertice[] vertices;
     public LinkedList<Vertice> vertices;
     
     public RedBayesiana(){
         this.vertices = new LinkedList<>();
+    }
+    
+    public void setAdyacentes(LinkedList<Vertice> v){
+        this.vertices = v;
     }
     
     public int length(){
@@ -48,15 +51,20 @@ public class RedBayesiana {
         }
     }
     
-    /*
-    public void setAdyacenteProb(Vertice v, Vertice u, float prob){
+    
+    public void setAdyacenteProbV(Vertice v, Vertice u, float prob){
         for (Vertice vertice : vertices) {
             if (vertice == v) {
-                vertice.setAdyacente(u, prob);
+                
+                //lo mismo
+                vertice.setIsHecho(false);
+                setMeta(u.getTag());
+                
+                vertice.setAdyacente(u.getTag(), prob);
                 break; //lo encontre, lo añado y bye
             }
         }
-    }*/
+    }
     
      public void setAdyacenteProb(String v, String u, float prob){
         for (Vertice vertice : vertices) {
@@ -87,12 +95,12 @@ public class RedBayesiana {
      
     //-------------------------------------------------
     
-    private float CFHecho(Vertice v){
+    public float CFHecho(Vertice v){
         //Pre: es un hecho
         return v.getCF();
     }
     
-    private boolean isHecho(Vertice v){ //idk
+    public boolean isHecho(Vertice v){ //idk
         return v.isHecho();
     }
     
@@ -176,7 +184,24 @@ public class RedBayesiana {
         }
     }
     
-   
+    public String InferenciaStr(){
+        String resp = "";
+        if (verificarRed()) {
+            LinkedList<String> metas = getMetas();
+            for (int i = 0; i < metas.size(); i++) {
+              float res = CF_Fun(metas.get(i));
+              resp += "Resultado para " + metas.get(i) +" es: " + (res * 100) + "% \n";
+              System.out.println("Resultado para " + metas.get(i) +" es: " + res);  
+            }
+            /*float res = CF_Fun("M");
+            System.out.println("Resultado es: " + res);*/
+        }else{
+            System.out.println("Inserte bien su red");
+            resp = "Inserte bien su red, no se realizó la inferencia";
+        }
+        return resp;
+    }
+    
      public void Inferencia2(){
         if (verificarRed()) {
           
@@ -188,7 +213,7 @@ public class RedBayesiana {
     }
     
     
-    private boolean verificarRed() {
+    public boolean verificarRed() {
         for (int i = 0; i < vertices.size(); i++) {
             Vertice v = vertices.get(i);
             LinkedList<Adyacente> adys = v.getAdyacentes();
