@@ -64,6 +64,9 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         resultadosTextArea = new javax.swing.JTextArea();
+        probabilidadText = new javax.swing.JTextField();
+        probLabel = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         limpiarLienzoButton = new javax.swing.JMenuItem();
@@ -134,6 +137,12 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         resultadosTextArea.setRows(5);
         jScrollPane1.setViewportView(resultadosTextArea);
 
+        probLabel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        probLabel.setText("Probabilidad:");
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setText("Añadir / Editar Arista Probabilidad");
+
         jMenu1.setText("Menu");
 
         limpiarLienzoButton.setText("Limpiar Lienzo");
@@ -180,30 +189,37 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addGap(104, 104, 104))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(addVerticeButton))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(43, 43, 43)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel6)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel3)
+                                                    .addGap(18, 18, 18)
+                                                    .addComponent(verticeOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(probLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(verticeDestino)
+                                                        .addComponent(probabilidadText))))))))
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(addProbabilidadButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(43, 43, 43)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel3)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(verticeOrigen))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel4)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(verticeDestino))))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(18, 18, 18)
-                                    .addComponent(addProbabilidadButton)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(inferenciaButton))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(addVerticeButton))))
+                                .addComponent(inferenciaButton)))
                         .addContainerGap(21, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -226,7 +242,9 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                     .addComponent(lienzo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addVerticeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)
+                        .addGap(8, 8, 8)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(verticeOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -234,11 +252,15 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(verticeDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addProbabilidadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(probabilidadText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(probLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addProbabilidadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(inferenciaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(59, 59, 59)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1)))
@@ -303,12 +325,16 @@ public class JPRedBayesiana extends javax.swing.JFrame {
             
             String vorigen = verticeOrigen.getText();
             String vdestino = verticeDestino.getText();
+            String vprob = probabilidadText.getText();
 
             if (vorigen.length() == 0 || vdestino.length() == 0) {
                 JOptionPane.showConfirmDialog(rootPane, "Ingrese correctamente los vertices");
+            }else if(vprob.length() == 0){
+                JOptionPane.showConfirmDialog(rootPane, "Ingrese la probabilidad!!!");
             }else{
 
-                String dato = JOptionPane.showInputDialog("Ingrese la probalidad");
+                String dato = vprob;
+                //String dato = JOptionPane.showInputDialog("Ingrese la probalidad");
                 if (!dato.isEmpty()) {
                     System.out.println(dato + " - lo tomeee");
                     try {
@@ -320,7 +346,12 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                             Vertice v = RB.getVertice(vorigen.toUpperCase());
                             Vertice u = RB.getVertice(vdestino.toUpperCase());
                             if (v == null || u == null ) {
-                                JOptionPane.showConfirmDialog(rootPane, "Ingrese vertices válidos");
+                                
+                                if (RB.vertices.isEmpty()) {
+                                    JOptionPane.showConfirmDialog(rootPane, "Ingrese vertices, la Red Bayesiana esta vacia");
+                                }else{
+                                    JOptionPane.showConfirmDialog(rootPane, "Ingrese vertices válidos");
+                                }
                             }else{
 
                                 //añade adyacents no duplicados, solo actualiza el valor 
@@ -354,6 +385,10 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                 }
             }
         }
+        
+        verticeOrigen.setText("");
+        verticeDestino.setText("");
+        probabilidadText.setText("");
     }//GEN-LAST:event_addProbabilidadButtonActionPerformed
 
   
@@ -399,6 +434,18 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                 }else{
                     try {
                         cf = Float.parseFloat(dato);
+                        
+                        //EL CF le pudo haber dado un valor mayor
+                        if (cf < 0 || cf > 1) {
+                            
+                        //}
+                        //if (cf >= 0 && cf <= 1) { //en rango 0 - 1
+                            
+                        //}else{
+                            JOptionPane.showConfirmDialog(rootPane, "Ingrese un valor de CF válido entre 0 - 1");
+                            return false;
+                        }
+                        
                     } catch (Exception e) {
                         JOptionPane.showConfirmDialog(rootPane, "Ingrese el valor de un CF válido");
                         return false;
@@ -412,7 +459,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                 G1.setColor(this.getBackground());
                 G1.fillRect(v.getPosX()- 10, v.getPosY() - 20, 20, 12);
                 G1.setColor(Color.BLACK);
-                G1.drawString(dato, v.getPosX() - 10, v.getPosY() - 10);
+                G1.drawString(String.valueOf(cf), v.getPosX() - 10, v.getPosY() - 10); //dato
                 
                 v.setCF(cf); //actualizado
             }
@@ -562,6 +609,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         verticeOrigen.setText("");
         verticeDestino.setText("");
         resultadosTextArea.setText(""); //limpio los resultados tambien
+        probabilidadText.setText("");
         
         //no tengo archivo para cargar o actualizarlo
         archivoExiste = false;
@@ -615,12 +663,15 @@ public class JPRedBayesiana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel lienzo;
     private javax.swing.JMenuItem limpiarLienzoButton;
+    private javax.swing.JLabel probLabel;
+    private javax.swing.JTextField probabilidadText;
     private javax.swing.JTextArea resultadosTextArea;
     private javax.swing.JTextField verticeDestino;
     private javax.swing.JTextField verticeOrigen;

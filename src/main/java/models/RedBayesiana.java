@@ -1,6 +1,7 @@
 
 package models;
 
+import com.google.gson.Gson;
 import java.util.LinkedList;
 
 public class RedBayesiana {
@@ -176,6 +177,8 @@ public class RedBayesiana {
             System.out.println("Inserte bien su red");
             resp = "Inserte bien su red, no se realizó la inferencia";
         }
+        
+        System.out.println(resp);
         return resp;
     }
     
