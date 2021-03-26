@@ -67,12 +67,12 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         probabilidadText = new javax.swing.JTextField();
         probLabel = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         limpiarLienzoButton = new javax.swing.JMenuItem();
         cargarRedButton = new javax.swing.JMenuItem();
         guardarRedButton = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -95,7 +95,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setText("Proyecto - Redes Bayeanas");
+        jLabel1.setText("Proyecto - Redes Bayesianas");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Sistemas Expertos");
@@ -143,6 +143,9 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("Añadir / Editar Arista Probabilidad");
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setText("Univ. Alejandra Murillo");
+
         jMenu1.setText("Menu");
 
         limpiarLienzoButton.setText("Limpiar Lienzo");
@@ -171,9 +174,6 @@ public class JPRedBayesiana extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -195,9 +195,6 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(addVerticeButton))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(43, 43, 43)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,7 +211,12 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(verticeDestino)
-                                                        .addComponent(probabilidadText))))))))
+                                                        .addComponent(probabilidadText))))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(addVerticeButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(addProbabilidadButton)
@@ -233,11 +235,13 @@ public class JPRedBayesiana extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(13, 13, 13)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel2)
-                .addGap(29, 29, 29)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lienzo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -264,7 +268,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -272,8 +276,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
 
     private void addVerticeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVerticeButtonActionPerformed
         
-        if ( action.equals(Constantes.INICIAL) ) {
-            //cuando le doy cancelar sale un exception, hay que ponerle un trycatch o algo asi 
+        if ( action.equals(Constantes.INICIAL) ) { 
 
             String VerticeTag = JOptionPane.showInputDialog("Inserte nombre del vertice: ");
             if (VerticeTag.length() == 0) {
@@ -292,9 +295,9 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                     RB.addVertice(VerticeTagU);
                     action = Constantes.DIBUJAR_VERTICES;
                     JOptionPane.showMessageDialog(rootPane, "Elija el lugar dando click");
-                    String verticesji = RB.toString();
+                    //String verticesji = RB.toString();
 
-                    resultadosTextArea.setText(verticesji);
+                    //resultadosTextArea.setText(verticesji);
                 }else{
                     JOptionPane.showConfirmDialog(rootPane, "El vertice ya existe");
                 }
@@ -355,7 +358,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                             }else{
 
                                 //añade adyacents no duplicados, solo actualiza el valor 
-                                RB.setAdyacenteProb(u.getTag(), v.getTag(), vprobabilidad); //verificar tambien, este me funciono primero
+                                RB.setAdyacenteProb(u.getTag(), v.getTag(), vprobabilidad); //
 
                                 Graphics G1 = lienzo.getGraphics();
 
@@ -366,9 +369,6 @@ public class JPRedBayesiana extends javax.swing.JFrame {
 
                                 G1.setColor(this.getBackground());
                                 G1.fillRect((vposX + uposX)/2, ((vposY + uposY )/2) - 10, 20, 12);
-
-                                //esto es para borrar la arista, seria en otro boton
-                                //G1.fillRect(vposX, vposY, uposX - vposX,12);
 
                                 G1.setColor(Color.black);
                                 G1.drawLine(vposX, vposY, uposX, uposY);
@@ -410,8 +410,8 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                     res = RB.Inferencia();
                 }
                 
-                resultadosTextArea.append("\n");//hago un espacio ñe
-                resultadosTextArea.append(res); //lo va a poner abajito   
+                resultadosTextArea.append("\n");
+                resultadosTextArea.append(res); //   
                 
             }else{
                 System.out.println("Inserte bien su red");
@@ -436,20 +436,14 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                         cf = Float.parseFloat(dato);
                         
                         //EL CF le pudo haber dado un valor mayor
-                        if (cf < 0 || cf > 1) {
-                            
-                        //}
-                        //if (cf >= 0 && cf <= 1) { //en rango 0 - 1
-                            
-                        //}else{
+                        if (cf < 0 || cf > 1) {                            
                             JOptionPane.showConfirmDialog(rootPane, "Ingrese un valor de CF válido entre 0 - 1");
                             return false;
                         }
                         
                     } catch (Exception e) {
                         JOptionPane.showConfirmDialog(rootPane, "Ingrese el valor de un CF válido");
-                        return false;
-                        //break;
+                        return false;                        
                     }
                 }
                 Graphics G1 = lienzo.getGraphics();
@@ -585,7 +579,7 @@ public class JPRedBayesiana extends javax.swing.JFrame {
                     nombreArchivo = filename;
                 }
                 
-                //Aqui creo que deberia limpiar el lienzo automaticamente
+                //Aqui limpio el lienzo
                 limpiarLienzoButtonActionPerformed(evt);
 
             } catch (IOException ex) {
@@ -664,8 +658,8 @@ public class JPRedBayesiana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel lienzo;

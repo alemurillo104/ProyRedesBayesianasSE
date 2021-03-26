@@ -1,7 +1,6 @@
 
 package models;
 
-import com.google.gson.Gson;
 import java.util.LinkedList;
 
 public class RedBayesiana {

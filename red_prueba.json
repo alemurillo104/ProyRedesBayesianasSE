@@ -1,0 +1,1 @@
+{"vertices":[{"tag":"A","CF":0.3,"isHecho":true,"isMeta":false,"PosX":143,"PosY":183,"adys":[]},{"tag":"B","CF":0.58,"isHecho":false,"isMeta":true,"PosX":289,"PosY":108,"adys":[{"verticeU":"A","probabilidad":0.3},{"verticeU":"C","probabilidad":0.7}]},{"tag":"C","CF":0.7,"isHecho":true,"isMeta":false,"PosX":264,"PosY":247,"adys":[]}]}
